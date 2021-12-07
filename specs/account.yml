@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  title: "API"
+  version: "1.0.0"
+  contact:
+    name: Sandeep Mishra
+    email: sandeep.r.mishra@live.com
+    url: https://account.position.system.com/
+tags:
+  - name: Metadata
+    description: Metadata related requests
+paths:
+  /:
+    get:
+      operationId: getMetadata
+      summary: Get metadata from the root of the API
+      tags: [ 'Metadata' ]
+      responses:
+        '200':
+          description: OK
+
+  /account/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: 
+          $ref: '#/components/schemas/accountId'
+    get:
+      tags: 
+        - account
+      operationId: getAccount
+      summary: get account details
+      description: get account details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: 
+              schema: 
+                $ref:  '#/components/schemas/account'
+        '404': 
+          description: "NOT FOUND"
+          
+    put:
+      tags:
+        - account, debit, credit
+      description: Debit or Credit account
+      requestBody: 
+        description: Debit/Credit Instruction Request Object
+        required: true
+        content: 
+          AccountRequest: 
+            schema: 
+              properties: 
+                operationType: 
+                  enum: [credit, debit]
+                  description: Operation type
+                  example: 'Credit, Debit'
+                value: 
+                  type: number
+                  format: float
+                  description: Amount
+                  example: 100.50
+                  minimum: 0
+                  exclusiveMinimum: true
+      responses: 
+        200: 
+          description: OK
+
+  /accounts:
+    get:
+      description: get list of accounts
+      responses:
+        '200':
+          description: OK
+          content:
+              application/json: 
+                schema: 
+                  $ref:  '#/components/schemas/accounts'
+    post:
+      tags:
+        - create account
+      description: create account
+      requestBody: 
+        description: content to create account
+        required: true
+        content: 
+          contentType: 
+            schema: 
+              $ref: '#/components/schemas/account'
+      responses: 
+        201: 
+          description: OK
+          
+servers:
+  - url: https://localhost:8080/
+    description: development
+  - url: https://aps.prod.com/
+    description: production
+
+components:
+  schemas:
+    account:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        balance: 
+          type: number
+    accounts: 
+      type: array
+      items: 
+        $ref: '#/components/schemas/account'
+    accountId: 
+      type: string 
+      example: 'ABC-123-456-A'
+
+  parameters:
+    accountId:
+      name: accountId
+      in: query
+      required: true
+      description: account unique reference
+      schema:
+        type: string
+        example: 'ABC-123-456-A'
