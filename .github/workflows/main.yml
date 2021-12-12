@@ -22,8 +22,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
+      # Run Spectral
       - name: Lint swagger file
-        uses: crudo/spectral-action@v6.1.0
+        uses: stoplightio/spectral-action@v0.8.0
         with:
-          file_path: specs/account.yml
+          file_glob: 'specs/*.yaml'

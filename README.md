@@ -1,2 +1,2 @@
 # openapi-disco
-Respository containing OpenApi Specifications  
+Repository containing OpenApi Specifications  
